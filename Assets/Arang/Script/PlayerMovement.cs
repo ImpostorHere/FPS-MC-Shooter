@@ -12,8 +12,8 @@ public class PlayerMovement : MonoBehaviour
     public Camera PlayerCamera;
     public Rigidbody RB;
 
-    [SerializeField]
     Vector3 MouseDelta => Input.mousePositionDelta;
+    Vector2 _moveInput;
 
     void Update()
     {
@@ -26,13 +26,27 @@ public class PlayerMovement : MonoBehaviour
         {
             PlayerCamera.transform.Rotate(Vector3.right, -verticalRotateSpeed * Time.deltaTime * MouseDelta.y);
         }
+
+        _moveInput.x = Input.GetAxis("Horizontal");
+        _moveInput.y = Input.GetAxis("Vertical");
+        _moveInput.Normalize();
     }
 
     void FixedUpdate()
     {
-        if (Input.GetKey(KeyCode.W))
-        {
-            RB.linearVelocity = transform.forward * moveSpeed;
-        }
+        MoveCharacter_Horizontal(_moveInput);
+    }
+
+    /// <summary>
+    /// Will be called at FixedUpdate()
+    /// </summary>
+    /// <param name="inputDir"></param>
+    void MoveCharacter_Horizontal(Vector2 inputDir)
+    {
+        Vector3 moveDirection = new Vector3(inputDir.x, 0, inputDir.y);
+        
+        Vector3 localDir = transform.TransformDirection(moveDirection);
+
+        RB.linearVelocity = localDir * moveSpeed * Time.fixedDeltaTime;
     }
 }
