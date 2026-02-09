@@ -21,10 +21,18 @@ public class PlayerMovement : MonoBehaviour
         {
             transform.Rotate(Vector3.up, horizontalRotateSpeed * Time.deltaTime * MouseDelta.x);
         }
-        
+
         if (MouseDelta.y != 0)
         {
             PlayerCamera.transform.Rotate(Vector3.right, -verticalRotateSpeed * Time.deltaTime * MouseDelta.y);
+            if (PlayerCamera.transform.localEulerAngles.x > 85)
+            {
+                PlayerCamera.transform.localEulerAngles = new Vector3(85, 0, 0);
+            }
+            else if (PlayerCamera.transform.localEulerAngles.x < -85)
+            {
+                PlayerCamera.transform.localEulerAngles = new Vector3(-85, 0, 0);
+            }
         }
 
         _moveInput.x = Input.GetAxis("Horizontal");
@@ -44,7 +52,7 @@ public class PlayerMovement : MonoBehaviour
     void MoveCharacter_Horizontal(Vector2 inputDir)
     {
         Vector3 moveDirection = new Vector3(inputDir.x, 0, inputDir.y);
-        
+
         Vector3 localDir = transform.TransformDirection(moveDirection);
 
         RB.linearVelocity = localDir * moveSpeed * Time.fixedDeltaTime;
