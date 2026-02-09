@@ -14,6 +14,12 @@ public class PlayerMovement : MonoBehaviour
 
     Vector3 MouseDelta => Input.mousePositionDelta;
     Vector2 _moveInput;
+    float _cameraXRotation = 0f;
+
+    void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+    }
 
     void Update()
     {
@@ -24,15 +30,10 @@ public class PlayerMovement : MonoBehaviour
 
         if (MouseDelta.y != 0)
         {
-            PlayerCamera.transform.Rotate(Vector3.right, -verticalRotateSpeed * Time.deltaTime * MouseDelta.y);
-            if (PlayerCamera.transform.localEulerAngles.x > 85)
-            {
-                PlayerCamera.transform.localEulerAngles = new Vector3(85, 0, 0);
-            }
-            else if (PlayerCamera.transform.localEulerAngles.x < -85)
-            {
-                PlayerCamera.transform.localEulerAngles = new Vector3(-85, 0, 0);
-            }
+            _cameraXRotation -= verticalRotateSpeed * Time.deltaTime * MouseDelta.y;
+            _cameraXRotation = Mathf.Clamp(_cameraXRotation, -85f, 85f);
+
+            PlayerCamera.transform.localEulerAngles = new Vector3(_cameraXRotation, 0, 0);
         }
 
         _moveInput.x = Input.GetAxis("Horizontal");
