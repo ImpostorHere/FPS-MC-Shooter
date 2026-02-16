@@ -4,7 +4,8 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Setting")]
-    public float moveSpeed = 5;
+    public float moveSpeed = 50;
+    public float moveSpeedMultiplier = 1.25f;
     public float horizontalRotateSpeed = 10f;
     public float verticalRotateSpeed = 10f;
 
@@ -15,6 +16,8 @@ public class PlayerMovement : MonoBehaviour
     Vector3 MouseDelta => Input.mousePositionDelta;
     Vector2 _moveInput;
     float _cameraXRotation = 0f;
+
+    bool isSprint;
 
     void Start()
     {
@@ -39,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
         _moveInput.x = Input.GetAxis("Horizontal");
         _moveInput.y = Input.GetAxis("Vertical");
         _moveInput.Normalize();
+        isSprint = Input.GetKey(KeyCode.LeftShift);
     }
 
     void FixedUpdate()
@@ -53,9 +57,9 @@ public class PlayerMovement : MonoBehaviour
     void MoveCharacter_Horizontal(Vector2 inputDir)
     {
         Vector3 moveDirection = new Vector3(inputDir.x, 0, inputDir.y);
-
         Vector3 localDir = transform.TransformDirection(moveDirection);
 
-        RB.linearVelocity = localDir * moveSpeed * Time.fixedDeltaTime;
+        float multiplier = isSprint ? moveSpeedMultiplier : 1;
+        RB.linearVelocity = localDir * moveSpeed * multiplier * Time.fixedDeltaTime;
     }
 }
