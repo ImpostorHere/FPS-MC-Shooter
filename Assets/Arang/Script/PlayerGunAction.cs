@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
@@ -26,10 +27,55 @@ public class PlayerGunAction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (UsedWeaponConfig.fireType == FireType.Single)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                DoFire();
+            }
+        }
+        else if (UsedWeaponConfig.fireType == FireType.Burst)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                DoBurstFire();
+            }
+        }
+        else if (UsedWeaponConfig.fireType == FireType.Auto)
+        {
+            if (Input.GetMouseButton(0))
+            {
+                
+            }
+        }
+    }
+
+    void DoBurstFire()
+    {
+        if (burstCoroutine != null)
+        {
+            return;
+        }
+
+        burstCoroutine = StartCoroutine(BurstFireCo(UsedWeaponConfig.burstFireCount, UsedWeaponConfig.fireDelay));
+    }
+
+    Coroutine burstCoroutine;
+    IEnumerator BurstFireCo(int fireCount, float fireDelay)
+    {
+        int fireCountLeft = fireCount;
+        while (fireCountLeft > 0)
         {
             DoFire();
+            fireCountLeft--;
+
+            if (fireCountLeft == 0)
+                break;
+            else
+                yield return new WaitForSeconds(fireDelay);
         }
+
+        burstCoroutine = null;
     }
 
     void DoFire()
@@ -60,6 +106,8 @@ public class WeaponConfiguration
     public int maxAmmo;
     public float fireDelay;
     public float recoil;
+
+    public int burstFireCount = 3;
 }
 
 public enum WeaponType

@@ -1106,11 +1106,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponConfigs:
   - weaponType: 0
-    fireType: 0
+    fireType: 1
     weaponPrefab: {fileID: 0}
     maxAmmo: 30
     fireDelay: 2
     recoil: 0
+    burstFireCount: 3
   usedWeaponType: 0
   raycastLayer:
     serializedVersion: 2
