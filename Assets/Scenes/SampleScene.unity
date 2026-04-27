@@ -119,6 +119,77 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &46224923
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 330585546}
+    m_Modifications:
+    - target: {fileID: 3281129639578075558, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235622462667594112, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235622462667594112, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235622462667594112, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235622462667594112, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235622462667594112, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235622462667594112, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235622462667594112, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235622462667594112, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235622462667594112, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5235622462667594112, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8691740868135206263, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+      propertyPath: m_Name
+      value: AK47
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+--- !u!4 &46224924 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5235622462667594112, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+  m_PrefabInstance: {fileID: 46224923}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &46224926 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 3281129639578075558, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+  m_PrefabInstance: {fileID: 46224923}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &53204477
 GameObject:
   m_ObjectHideFlags: 0
@@ -451,10 +522,11 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.41, z: 0.69}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 46224924}
   m_Father: {fileID: 1072223361}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &330585547
@@ -1086,12 +1158,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6f8492c147e7444093a453e7857369a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 75
+  moveSpeed: 200
   moveSpeedMultiplier: 3
   horizontalRotateSpeed: 10
   verticalRotateSpeed: 10
   PlayerCamera: {fileID: 330585545}
   RB: {fileID: 1072223357}
+  weaponAnimator: {fileID: 46224926}
 --- !u!114 &1072223363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1104,13 +1177,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dab4af649de87fa4fb31a9ee1cc3851e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  recoilProportion: 0
+  weaponAnimator: {fileID: 46224926}
   weaponConfigs:
   - weaponType: 0
-    fireType: 1
+    fireType: 2
     weaponPrefab: {fileID: 0}
     maxAmmo: 30
-    fireDelay: 2
-    recoil: 0
+    fireDelay: 0.1
+    recoil: 0.1
     burstFireCount: 3
   usedWeaponType: 0
   raycastLayer:

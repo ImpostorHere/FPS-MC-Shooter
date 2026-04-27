@@ -3,9 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PlayerGunAction : MonoBehaviour
 {
+    [Range(0, 1)]
+    public float recoilProportion;
+
+    [Header("References")]
+    public Animator weaponAnimator;
+
     [Header("Weapon")]
     public List<WeaponConfiguration> weaponConfigs;
     public WeaponType usedWeaponType;
@@ -17,7 +24,9 @@ public class PlayerGunAction : MonoBehaviour
     [Header("FX")]
     public GameObject hitFxPrefab;
 
+    
     PlayerMovement _movementCont;
+    float _currentAutoFireTimer;
 
     void Start()
     {
@@ -43,9 +52,23 @@ public class PlayerGunAction : MonoBehaviour
         }
         else if (UsedWeaponConfig.fireType == FireType.Auto)
         {
+            if (Input.GetMouseButtonDown(0))
+            {
+                DoFire();
+                _currentAutoFireTimer = UsedWeaponConfig.fireDelay;
+            }
+
             if (Input.GetMouseButton(0))
             {
-                
+                if (_currentAutoFireTimer > 0)
+                {
+                    _currentAutoFireTimer -= Time.deltaTime;
+                }
+                else
+                {
+                    DoFire();
+                    _currentAutoFireTimer = UsedWeaponConfig.fireDelay;
+                }
             }
         }
     }
@@ -84,6 +107,12 @@ public class PlayerGunAction : MonoBehaviour
         Vector3 camPos = camTransform.position;
         Vector3 camDir = camTransform.forward;
 
+        float recoilX = Random.Range(-UsedWeaponConfig.recoil, UsedWeaponConfig.recoil) * recoilProportion;
+        float recoilY = Random.Range(-UsedWeaponConfig.recoil, UsedWeaponConfig.recoil) * recoilProportion;
+
+        camDir += camTransform.right * recoilX;
+        camDir += camTransform.up * recoilY;
+
         Ray ray = new Ray();
         ray.origin = camPos;
         ray.direction = camDir;
@@ -94,6 +123,8 @@ public class PlayerGunAction : MonoBehaviour
             GameObject spawnedFx = Instantiate(hitFxPrefab, hitPos, Quaternion.identity);
             Destroy(spawnedFx, 2);
         }
+
+        weaponAnimator.SetTrigger("Shoot");
     }
 }
 

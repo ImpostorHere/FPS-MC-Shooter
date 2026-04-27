@@ -12,12 +12,14 @@ public class PlayerMovement : MonoBehaviour
     [Header("References")]
     public Camera PlayerCamera;
     public Rigidbody RB;
+    public Animator weaponAnimator;
 
     Vector3 MouseDelta => Input.mousePositionDelta;
     Vector2 _moveInput;
     float _cameraXRotation = 0f;
 
     bool isSprint;
+    bool isMoving;
 
     void Start()
     {
@@ -42,7 +44,11 @@ public class PlayerMovement : MonoBehaviour
         _moveInput.x = Input.GetAxis("Horizontal");
         _moveInput.y = Input.GetAxis("Vertical");
         _moveInput.Normalize();
+        isMoving = _moveInput != Vector2.zero;
+
         isSprint = Input.GetKey(KeyCode.LeftShift);
+
+        weaponAnimator.SetBool("Walk", isMoving);
     }
 
     void FixedUpdate()
