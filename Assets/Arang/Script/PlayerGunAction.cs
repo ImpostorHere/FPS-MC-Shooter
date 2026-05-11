@@ -9,9 +9,13 @@ public class PlayerGunAction : MonoBehaviour
 {
     [Range(0, 1)]
     public float recoilProportion;
+    public int currentAmmo;
+    public int reserveAmmo;
+    public bool isReloading;
 
     [Header("References")]
     public Animator weaponAnimator;
+    public GunEventBroadcaster weaponEventBroadcaster;
 
     [Header("Weapon")]
     public List<WeaponConfiguration> weaponConfigs;
@@ -23,7 +27,6 @@ public class PlayerGunAction : MonoBehaviour
 
     [Header("FX")]
     public GameObject hitFxPrefab;
-
     
     PlayerMovement _movementCont;
     float _currentAutoFireTimer;
@@ -31,34 +34,41 @@ public class PlayerGunAction : MonoBehaviour
     void Start()
     {
         _movementCont = GetComponent<PlayerMovement>();
+        InitWeapon();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.R) && !isReloading && IsEligibleToReload())
+        {
+            weaponAnimator.SetTrigger("Reload");
+            isReloading = true;
+        }
+
         if (UsedWeaponConfig.fireType == FireType.Single)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !isReloading)
             {
                 DoFire();
             }
         }
         else if (UsedWeaponConfig.fireType == FireType.Burst)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !isReloading)
             {
                 DoBurstFire();
             }
         }
         else if (UsedWeaponConfig.fireType == FireType.Auto)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !isReloading)
             {
                 DoFire();
                 _currentAutoFireTimer = UsedWeaponConfig.fireDelay;
             }
 
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButton(0) && !isReloading)
             {
                 if (_currentAutoFireTimer > 0)
                 {
@@ -71,6 +81,53 @@ public class PlayerGunAction : MonoBehaviour
                 }
             }
         }
+    }
+
+    void InitWeapon()
+    {
+        currentAmmo = UsedWeaponConfig.maxAmmo;
+        reserveAmmo = UsedWeaponConfig.maxAmmo * 3;
+
+        weaponEventBroadcaster.OnReloadMagazineAttached -= DoReload;
+        weaponEventBroadcaster.OnReloadMagazineAttached += DoReload;
+
+        weaponEventBroadcaster.OnReloadDone -= ReloadDoneHandler;
+        weaponEventBroadcaster.OnReloadDone += ReloadDoneHandler;
+    }
+
+    bool IsEligibleToReload()
+    {
+        if (currentAmmo < UsedWeaponConfig.maxAmmo && reserveAmmo > 0)
+            return true;
+        else
+            return false;
+    }
+
+    void ReloadDoneHandler()
+    {
+        isReloading = false;
+    }
+
+    void DoReload()
+    {
+        // Not deleted for reference purpose
+        // int ammoNeededToFullCap = UsedWeaponConfig.maxAmmo - currentAmmo;
+        // if (reserveAmmo < ammoNeededToFullCap)
+        // {
+        //     currentAmmo += reserveAmmo;
+        //     reserveAmmo = 0;
+        // }
+        // else
+        // {
+        //     reserveAmmo = reserveAmmo - ammoNeededToFullCap;
+        //     currentAmmo = UsedWeaponConfig.maxAmmo;
+        // }
+
+        int ammoNeeded = UsedWeaponConfig.maxAmmo - currentAmmo;
+        int ammoToLoad = Mathf.Min(reserveAmmo, ammoNeeded);
+
+        currentAmmo += ammoToLoad;
+        reserveAmmo -= ammoToLoad;
     }
 
     void DoBurstFire()
@@ -103,6 +160,12 @@ public class PlayerGunAction : MonoBehaviour
 
     void DoFire()
     {
+        if (currentAmmo <= 0)
+        {
+            // Do no ammo SFX
+            return;
+        }
+
         Transform camTransform = _movementCont.PlayerCamera.transform;
         Vector3 camPos = camTransform.position;
         Vector3 camDir = camTransform.forward;
@@ -125,6 +188,7 @@ public class PlayerGunAction : MonoBehaviour
         }
 
         weaponAnimator.SetTrigger("Shoot");
+        currentAmmo--;
     }
 }
 
