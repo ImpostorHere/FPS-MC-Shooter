@@ -9,6 +9,7 @@ public class PlayerGunAction : MonoBehaviour
 {
     [Range(0, 1)]
     public float recoilProportion;
+    public float currentRecoverySpeed;
     public int currentAmmo;
     public int reserveAmmo;
     public bool isReloading;
@@ -30,6 +31,7 @@ public class PlayerGunAction : MonoBehaviour
     
     PlayerMovement _movementCont;
     float _currentAutoFireTimer;
+    float _currentRecoveryTime;
 
     void Start()
     {
@@ -81,12 +83,19 @@ public class PlayerGunAction : MonoBehaviour
                 }
             }
         }
+
+        recoilProportion -= currentRecoverySpeed * Time.deltaTime;
+        recoilProportion = Mathf.Max(0, recoilProportion);
+
+        _currentRecoveryTime += UsedWeaponConfig.recoilRecoveryTimeFactor * Time.deltaTime;
+        currentRecoverySpeed *= 1 + _currentRecoveryTime;
     }
 
     void InitWeapon()
     {
         currentAmmo = UsedWeaponConfig.maxAmmo;
         reserveAmmo = UsedWeaponConfig.maxAmmo * 3;
+        currentRecoverySpeed = UsedWeaponConfig.recoilRecoverySpeed;
 
         weaponEventBroadcaster.OnReloadMagazineAttached -= DoReload;
         weaponEventBroadcaster.OnReloadMagazineAttached += DoReload;
@@ -189,6 +198,12 @@ public class PlayerGunAction : MonoBehaviour
 
         weaponAnimator.SetTrigger("Shoot");
         currentAmmo--;
+
+        recoilProportion += UsedWeaponConfig.recoilProportionIncrement;
+        recoilProportion = Mathf.Min(recoilProportion, 1);
+
+        _currentRecoveryTime = 0;
+        currentRecoverySpeed = UsedWeaponConfig.recoilRecoverySpeed;
     }
 }
 
@@ -201,6 +216,17 @@ public class WeaponConfiguration
     public int maxAmmo;
     public float fireDelay;
     public float recoil;
+
+    // Menambahkan nilai Recoil Proportion di tiap tembakan
+    [Range(0, 1)]
+    public float recoilProportionIncrement = 0.1f;
+
+    // Mengurangin nilai Recoil Proportion per waktu
+    [Range(0, 1)]
+    public float recoilRecoverySpeed = 0.25f;
+
+    [Range(0, 1)]
+    public float recoilRecoveryTimeFactor = 0.25f;
 
     public int burstFireCount = 3;
 }
