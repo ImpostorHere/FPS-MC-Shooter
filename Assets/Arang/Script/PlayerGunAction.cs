@@ -17,6 +17,7 @@ public class PlayerGunAction : MonoBehaviour
     [Header("References")]
     public Animator weaponAnimator;
     public GunEventBroadcaster weaponEventBroadcaster;
+    public Transform muzzleFlash;
 
     [Header("Weapon")]
     public List<WeaponConfiguration> weaponConfigs;
@@ -32,11 +33,15 @@ public class PlayerGunAction : MonoBehaviour
     PlayerMovement _movementCont;
     float _currentAutoFireTimer;
     float _currentRecoveryTime;
+    Vector3 _defaultMuzzleFlashScale;
 
     void Start()
     {
         _movementCont = GetComponent<PlayerMovement>();
         InitWeapon();
+
+        _defaultMuzzleFlashScale = muzzleFlash.localScale;
+        muzzleFlash.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -167,6 +172,28 @@ public class PlayerGunAction : MonoBehaviour
         burstCoroutine = null;
     }
 
+    void TriggerMuzzleFlash()
+    {
+        float duration = Random.Range(0.15f, 0.2f);
+        float rotation = Random.Range(-360f, 360f);
+        float scaleProportion = Random.Range(0.9f, 1.1f);
+        StartCoroutine(TriggerMuzzleFlashCo(duration, rotation, scaleProportion));
+    }
+
+    IEnumerator TriggerMuzzleFlashCo(float duration, 
+                                    float rotation, 
+                                    float scaleProportion)
+    {
+        muzzleFlash.gameObject.SetActive(true);
+        muzzleFlash.localEulerAngles = new Vector3(rotation, 
+                                                    muzzleFlash.localEulerAngles.y,
+                                                    muzzleFlash.localEulerAngles.z);
+        muzzleFlash.localScale = _defaultMuzzleFlashScale * scaleProportion;
+
+        yield return new WaitForSeconds(duration);
+        muzzleFlash.gameObject.SetActive(false);
+    }
+
     void DoFire()
     {
         if (currentAmmo <= 0)
@@ -174,6 +201,8 @@ public class PlayerGunAction : MonoBehaviour
             // Do no ammo SFX
             return;
         }
+
+        TriggerMuzzleFlash();
 
         Transform camTransform = _movementCont.PlayerCamera.transform;
         Vector3 camPos = camTransform.position;

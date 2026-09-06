@@ -127,9 +127,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 330585546}
     m_Modifications:
-    - target: {fileID: 3281129639578075558, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
-      propertyPath: m_Enabled
-      value: 1
+    - target: {fileID: 3384245979514336969, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 3384245979514336969, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3384245979514336969, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 3384245979514336969, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3384245979514336969, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5235622462667594112, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
       propertyPath: m_LocalPosition.x
@@ -827,6 +843,11 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!4 &472938864 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3384245979514336969, guid: c08faa0fe9ebf9a40a4d420fdb739515, type: 3}
+  m_PrefabInstance: {fileID: 46224923}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &516336366
 GameObject:
   m_ObjectHideFlags: 0
@@ -1213,6 +1234,7 @@ MonoBehaviour:
   isReloading: 0
   weaponAnimator: {fileID: 46224926}
   weaponEventBroadcaster: {fileID: 280138024}
+  muzzleFlash: {fileID: 472938864}
   weaponConfigs:
   - weaponType: 0
     fireType: 2
