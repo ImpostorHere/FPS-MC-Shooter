@@ -222,6 +222,13 @@ public class PlayerGunAction : MonoBehaviour
         {
             Vector3 hitPos = hitInfo.point;
             GameObject spawnedFx = Instantiate(hitFxPrefab, hitPos, Quaternion.identity);
+
+            var hitbox = hitInfo.collider.GetComponent<HitboxChecker>();
+            if (hitbox != null)
+            {
+                hitbox.RemoveHp(UsedWeaponConfig.damage);
+            }
+
             Destroy(spawnedFx, 2);
         }
 
@@ -245,6 +252,7 @@ public class WeaponConfiguration
     public int maxAmmo;
     public float fireDelay;
     public float recoil;
+    public float damage;
 
     // Menambahkan nilai Recoil Proportion di tiap tembakan
     [Range(0, 1)]
