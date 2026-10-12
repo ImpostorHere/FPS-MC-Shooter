@@ -48,7 +48,10 @@ public class PlayerMovement : MonoBehaviour
 
         isSprint = Input.GetKey(KeyCode.LeftShift);
 
-        weaponAnimator.SetBool("Walk", isMoving);
+        if (weaponAnimator.GetBool("IsReloading") == false)
+            weaponAnimator.SetBool("Walk", isMoving);
+        else
+            weaponAnimator.SetBool("Walk", false);
     }
 
     void FixedUpdate()

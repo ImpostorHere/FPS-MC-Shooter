@@ -51,6 +51,7 @@ public class PlayerGunAction : MonoBehaviour
         {
             weaponAnimator.SetTrigger("Reload");
             isReloading = true;
+            weaponAnimator.SetBool("IsReloading", isReloading);
         }
 
         if (UsedWeaponConfig.fireType == FireType.Single)
@@ -120,6 +121,7 @@ public class PlayerGunAction : MonoBehaviour
     void ReloadDoneHandler()
     {
         isReloading = false;
+        weaponAnimator.SetBool("IsReloading", isReloading);
     }
 
     void DoReload()
@@ -142,6 +144,8 @@ public class PlayerGunAction : MonoBehaviour
 
         currentAmmo += ammoToLoad;
         reserveAmmo -= ammoToLoad;
+
+        UIManager.Instance.UpdateAmmoIndicator(currentAmmo, UsedWeaponConfig.maxAmmo);
     }
 
     void DoBurstFire()
@@ -240,6 +244,8 @@ public class PlayerGunAction : MonoBehaviour
 
         _currentRecoveryTime = 0;
         currentRecoverySpeed = UsedWeaponConfig.recoilRecoverySpeed;
+
+        UIManager.Instance.UpdateAmmoIndicator(currentAmmo, UsedWeaponConfig.maxAmmo);
     }
 }
 
